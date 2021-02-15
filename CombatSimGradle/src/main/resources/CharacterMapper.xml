@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rsauron.combatsimulator.mapper.CharacterMapper">
+
+    <resultMap id = "CharacterRM" type = "Character">
+        <id property = "id" column = "id" />
+        <result property = "name" column = "name" />
+        <result property = "characterClass" column = "characterClass"/>
+        <result property = "hpLimit" column = "hpLimit"/>
+        <discriminator javaType = "int" column = "ally">
+            <case value = "0" resultMap = "EnemyRM" />
+            <case value = "1" resultMap = "AllyRM" />
+        </discriminator>
+    </resultMap>
+
+    <resultMap id = "AllyRM" type = "AllyCharacter" extends = "CharacterRM">
+        <result property = "manaLimit" column = "manaLimit" />
+    </resultMap>
+
+    <resultMap id = "EnemyRM" type = "EnemyCharacter" extends = "CharacterRM">
+        <result property = "rageLimit" column = "rageLimit" />
+    </resultMap>
+
+    <select id = "getAllCharacters" resultMap = "CharacterRM">
+        SELECT
+        id,
+        name,
+        class as characterClass,
+        hp_limit as hpLimit,
+        ally,
+        mana_limit as manaLimit,
+        rage_limit as rageLimit
+        FROM
+        characters
+    </select>
+
+    <select id="getEnemiesByID" resultType="Integer">
+        select target_id from enemy_sets where source_id = #{id}
+    </select>
+
+    <select id="getAlliesByID" resultType="Integer">
+        select ally_id from ally_sets where source_id = #{id}
+    </select>
+</mapper>

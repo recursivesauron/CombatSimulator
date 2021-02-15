@@ -1,0 +1,17 @@
+apiVersion: 1
+providers:
+- name: general
+  folder: ''
+  type: file
+  disableDeletion: true
+  editable: true
+  options:
+    path: /etc/grafana/provisioning/dashboards/general
+
+- name: admin
+  folder: 'admin'
+  type: file
+  disableDeletion: true
+  editable: true
+  options:
+    path: /etc/grafana/provisioning/dashboards/admin

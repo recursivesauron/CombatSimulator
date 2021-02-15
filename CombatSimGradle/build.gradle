@@ -1,0 +1,55 @@
+plugins {
+    id 'java'
+}
+
+group 'com.rsauron'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+allprojects {
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
+    }
+}
+
+dependencies {
+    implementation 'org.slf4j:slf4j-api:1.7.25'
+    implementation 'org.slf4j:slf4j-log4j12:1.7.25'
+    implementation 'org.json:json:20200518'
+    implementation 'org.apache.kafka:kafka-streams:2.6.0'
+    implementation 'org.apache.kafka:kafka-clients:2.6.0'
+    implementation 'org.postgresql:postgresql:42.2.18.jre7'
+    implementation 'org.mybatis:mybatis:3.5.6'
+    testImplementation 'org.apache.kafka:kafka-streams-test-utils:2.6.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task uberJar(type: Jar) {
+    archiveClassifier = 'uber'
+    from sourceSets.main.output
+
+    dependsOn configurations.runtimeClasspath
+    manifest {
+        attributes "Main-Class": "com.rsauron.combatsimulator.CombatSimulation"
+    }
+
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+
+    exclude 'LICENSE'
+    exclude 'NOTICE'
+    exclude 'META-INF/LICENSE'
+    exclude 'META-INF/NOTICE'
+    exclude 'module-info.class'
+}
