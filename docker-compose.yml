@@ -36,14 +36,14 @@ services:
 
   #https://github.com/streamsets/datacollector-docker
   streamsets-dc:
-    image: streamsets/datacollector:latest
+    build: ./streamsets
     container_name: streamsets-dc
-    restart: on-failure
     ports:
       - "18630:18630"
+    restart: on-failure
     volumes:
       - streamsets-dc-storage:/data
-  
+
   #https://github.com/confluentinc/cp-all-in-one/blob/5.5.1-post/cp-all-in-one-community/docker-compose.yml
   zookeeper:
     image: confluentinc/cp-zookeeper:5.5.1
@@ -118,9 +118,8 @@ services:
 
   combat-sim:
     build: ./CombatSimGradle
+    container_name: combat-sim
+    restart: on-failure
     depends_on:
       - postgres
       - kafka
-    container_name: combat-sim
-    restart: on-failure
-    

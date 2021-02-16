@@ -12,9 +12,37 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.concurrent.TimeUnit;
 
 public class CombatSimulation {
     public static void main(String[] args) {
+        boolean ranSuccessfully = false;
+
+        while(!ranSuccessfully) {
+            try {
+                Class.forName("org.postgresql.Driver");
+
+                Connection connection = DriverManager.getConnection(
+                        "jdbc:postgresql://postgres:5432/combatsimulation", "testuser",
+                        "testpass");
+
+                if (connection != null) {
+                    System.out.println("You made it, take control your database now!");
+                    runSimulation();
+                    ranSuccessfully = true;
+                }
+                else {
+                    System.out.println("Failed to make connection!");
+                    TimeUnit.SECONDS.sleep(1);
+                }
+            } catch (Exception e) {
+                System.out.println("Connection Failed! Check output console");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void runSimulation(){
         //Create KafkaEventProducer
         KafkaEventProducer kafkaEventProducer = new KafkaEventProducer("kafka", "29092");
         List<Character> everyone = new ArrayList<>();
@@ -56,13 +84,13 @@ public class CombatSimulation {
         }
         finally {
             hostiles = everyone.stream()
-                                .filter(character -> character instanceof EnemyCharacter)
-                                .collect(Collectors.toList());
+                    .filter(character -> character instanceof EnemyCharacter)
+                    .collect(Collectors.toList());
             friendlies = everyone.stream()
-                                 .filter(character -> character instanceof AllyCharacter)
-                                 .collect(Collectors.toList());
+                    .filter(character -> character instanceof AllyCharacter)
+                    .collect(Collectors.toList());
         }
-        
+
         //run simulation
         try {
             boolean combatInProgress = true;
