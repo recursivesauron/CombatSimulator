@@ -5,6 +5,7 @@ RUN if [ -n "${SDC_LIBS}" ]; then "${SDC_DIST}/bin/streamsets" stagelibs -instal
 USER ${SDC_USER}
 EXPOSE 18630
 COPY ./docker-entrypoint.sh /
+RUN dos2unix /docker-entrypoint.sh
 COPY ./form-realm.properties ${SDC_CONF}/
 ENTRYPOINT ["./docker-entrypoint.sh"]
 CMD ["dc", "-exec"]
