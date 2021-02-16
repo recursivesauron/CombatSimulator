@@ -8,6 +8,8 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +44,7 @@ public class CombatSimulation {
         }
     }
 
-    private void runSimulation(){
+    private static void runSimulation(){
         //Create KafkaEventProducer
         KafkaEventProducer kafkaEventProducer = new KafkaEventProducer("kafka", "29092");
         List<Character> everyone = new ArrayList<>();
