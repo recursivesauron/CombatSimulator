@@ -36,11 +36,11 @@ services:
 
   #https://github.com/streamsets/datacollector-docker
   streamsets-dc:
-    build: ./streamsets
+    image: streamsets/datacollector:latest
     container_name: streamsets-dc
+    restart: on-failure
     ports:
       - "18630:18630"
-    restart: on-failure
     volumes:
       - streamsets-dc-storage:/data
   
