@@ -35,11 +35,16 @@ public class CombatSimulation {
                 }
                 else {
                     System.out.println("Failed to make connection!");
-                    TimeUnit.SECONDS.sleep(10000);
+                    TimeUnit.SECONDS.sleep(10);
                 }
             } catch (Exception e) {
                 System.out.println("Connection Failed! Check output console");
-                e.printStackTrace();
+                try{
+                    TimeUnit.SECONDS.sleep(10);
+                }
+                catch(InterruptedException iex){
+                    System.exit(0);
+                }
             }
         }
     }
